@@ -675,8 +675,10 @@ void output_aas_push(output_t *st, uint8_t *buf, unsigned int len)
     if (port == 0x5100 || (port >= 0x5201 && port <= 0x5207))
     {
         // PSD ports
-        if ((port & 0x7) == st->program)
+        if ((port & 0x7) == st->program) {
             output_id3(buf + 4, len - 4);
+            write_file(st->aas_files_path, "id3.data", buf + 4, len - 4);
+        }
     }
     else if (port == 0x20)
     {
