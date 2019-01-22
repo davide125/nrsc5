@@ -453,6 +453,22 @@ static void output_id3(uint8_t *buf, unsigned int len)
                           price, until, url, seller, desc, received_as);
             }
         }
+        else if (memcmp(buf + off, "XHDR", 4) == 0)
+        {
+            int xhdr_length;
+            log_debug("XHDR MIME hash = %02X %02X %02X %02X", buf[off+10], buf[off+11], buf[off+12], buf[off+13]);
+            log_debug("XHDR Parameter ID = %02X", buf[off+14]);
+            xhdr_length = buf[off + 15];
+            if (xhdr_length > 0) {
+                int i;
+                char *hex = malloc(3 * xhdr_length + 1);
+                for (i = 0; i < xhdr_length; i++) {
+                    sprintf(hex + (3 * i), "%02X ", buf[off + 16 + i]);
+                }
+                hex[3 * i - 1] = 0;
+                log_debug("XHDR Value = %s", hex);
+            }
+        }
         else
         {
             int i;
